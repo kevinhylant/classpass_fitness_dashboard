@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel='stylesheet', href='/stylesheets/style.css'>
+  <title>Title of the document</title>
+</head>
+
+<body>
+  <script>src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js", type="text/javascript"</script>
+  <div class='header'>
+    <h1>Instructor Count: <%= instructors.length %></h1>
+  </div> 
+  <ul>
+    <% instructors.forEach(function(i) {  %> 
+      <li><%= i.instructor.first_name; %></li>
+    <% }); %>
+  </ul>
+</body>
+
+</html>
