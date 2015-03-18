@@ -37,10 +37,61 @@
     </header>
   </div>
 
+  <div class="main" role="main">
+    <div class="hero hero-image">
+      <div class="wrap">
+        <div class="hero-content">
+          <p class="hero-title">Welcome back, User</p>
+          </div>
+        </div>
+        <nav class="subnav hero-subnav">
+          <ul>
+            <li><a class="active" href="/fitness-dashboard">Dashboard</a></li>
+            <li><a href="/fitness-dashboard">Upcoming</a></li>
+            <li><a href="/fitness-dashboard">Past</a></li>
+            <li><a href="/fitness-dashboard">Favorites</a></li>
+            <li><a href="/fitness-dashboard">Friends</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
 
-  <%- body %>
+    <div class="wrap">
+      <div class="grid grid--rev"> 
+        <div class="grid__item md-3/12 hidden md-inline-block">
+          <aside>
+            <div class="user-specs">
+              <div class="avatar user-specs__avatar">
+                <div>K
+                </div>
+              </div>
+              <div class="user-specs__header">
+                <h3 class="delta">Kevin Hylant</h3>
+                <p>New York</p>
+              </div>
+              <ul>
+                <li><strong>1</strong> Upcoming</li>
+                <li><strong>41</strong> Completed</li>
+                <li><strong>4/15</strong> Cycle Ends</li>
+                <li><strong>28</strong>Days Remaining</li>
+              </ul>
+            </div>
+          </aside>
+        </div>
 
-  <footer>
+        <div class="grid__item md-9/12">
+          <section>
+            <%- body %>
+          </section>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+  <footer class='classpass-wrapper'>
     <div class='med-4'>
       <h5 class='footer-section-title'>LEARN MORE</h5>
     </div>

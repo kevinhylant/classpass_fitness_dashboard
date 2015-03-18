@@ -17,20 +17,16 @@ app.configure(function(){
   app.use(partials());
 
 
-
-
   // START - ROUTES
-    app.get('/fitness-dashboard', function(req, res){
-      res.render('fitness_dashboard', 
-        { users: users 
-        }
+    app.get('/', function (req, res){
+      res.render('welcome', 
+        {}
       );
     });
 
 
-    app.get('/', function (req, res) {
+    app.get('/fitness-dashboard', function (req, res) {
       res.render('index',
-        // {layout:'header'},
         {u_basic_stats : user_basic_stats
         ,u_activities_breakdown : user_activities_breakdown
         ,u_upcoming_classes : user_upcoming_classes 
@@ -58,40 +54,37 @@ app.configure(function(){
 });
 
   // START - DATA MODELING
-  var users = [
-    { name: 'tj', email: 'tj@sencha.com' }
-  , { name: 'ciaran', email: 'ciaranj@gmail.com' }
-  , { name: 'aaron', email: 'aaron.heckmann+github@gmail.com' }
-  ];
+  
+    // START - API CALLS
+      var user = 722
+      var basic_user_stats_api = 'http://localhost:9393/basic_user_stats/'+user;
+      var user_activities_breakdown_api = 'http://localhost:9393/user_activities_breakdown/'+user;
+      var user_upcoming_classes_api = 'http://localhost:9393/user_upcoming_classes/'+user;
 
-  // API CALLS TO COLLECT DATA
-    var user = 722
-    var basic_user_stats_api = 'http://localhost:9393/basic_user_stats/'+user;
-    var user_activities_breakdown_api = 'http://localhost:9393/user_activities_breakdown/'+user;
-    var user_upcoming_classes_api = 'http://localhost:9393/user_upcoming_classes/'+user;
+      var get_user_basic_stats = function(){
+        request.get(basic_user_stats_api, function(err, response, body) {
+          if (!err && response.statusCode == 200) {
+            user_basic_stats = JSON.parse(body);
+          }
+        });
+      }();
+      var get_user_activities_breakdown = function(){
+        request.get(user_activities_breakdown_api, function(err, response, body) {
+          if (!err && response.statusCode == 200) {
+            user_activities_breakdown = JSON.parse(body);
+          }
+        });
+      }();
+      var get_user_upcoming_classes = function(){
+        request.get(user_upcoming_classes_api, function(err, response, body) {
+          if (!err && response.statusCode == 200) {
+            user_upcoming_classes = JSON.parse(body);
+            console.log(user_upcoming_classes);
+          }
+        });
+      }();
+    // END  - API CALLS
 
-    var get_user_basic_stats = function(){
-      request.get(basic_user_stats_api, function(err, response, body) {
-        if (!err && response.statusCode == 200) {
-          user_basic_stats = JSON.parse(body);
-        }
-      });
-    }();
-    var get_user_activities_breakdown = function(){
-      request.get(user_activities_breakdown_api, function(err, response, body) {
-        if (!err && response.statusCode == 200) {
-          user_activities_breakdown = JSON.parse(body);
-        }
-      });
-    }();
-    var get_user_upcoming_classes = function(){
-      request.get(user_upcoming_classes_api, function(err, response, body) {
-        if (!err && response.statusCode == 200) {
-          user_upcoming_classes = JSON.parse(body);
-          console.log(user_upcoming_classes);
-        }
-      });
-    }();
   // END   - DATA MODELING
 
 
