@@ -1,97 +1,98 @@
- * Grab a custom font from Google
- */
-@import url("http://fonts.googleapis.com/css?family=Quicksand");
+/*PRIMARY COLOR SCHEME*/
+  /*  
+  Dark blue #252A40;
+    Dark grey for table/button borders: #9296A2;
+  Dark blue-purple (press section) #383e5a
+  Light CP blue #20cfb1;
+  Very light blue-purple(footer) #f4f7f9;
+    Mauve font color in footer #a1b0db;
+    Light grey font color footer #a1a1a1;
+
+  */
 
 
+
+
+/* ELEMENT STYLING START */
 body {
-  line-height: 1;
-  color: #000;
-  background: #fff;
+  font-family: proxima-nova, sans-serif;
+  font-size: .9375em;
+  line-height: 1.2;
+  letter-spacing: .05em;
+  color: #fff;
+  /*color: #252a40;*/
+  margin: 0px;
+
+  background-color: #252A40;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: #20cfb1;
+  font-family: din,sans-serif;
+  font-weight: 700;
+  letter-spacing: .05em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-transform: uppercase;
+  margin: 0px;
+}
+
+h1 {
+  font-size: 62px;
+}
+h2 {
+  font-size: 25px;
+}
+h3 {
+  font-size: 20px;
+}
+h4 {
+  font-size: 18px;
+}
+
+p {
+  line-height: 1.8;
 }
 ol,
 ul {
   list-style: none;
 }
+
 table {
   border-collapse: separate;
   border-spacing: 0;
   vertical-align: middle;
 }
-caption,
-th,
-td {
-  text-align: left;
-  font-weight: normal;
-  vertical-align: middle;
+button {
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 2px;
 }
 a img {
   border: none;
 }
-/*
- * Store the main color and
- * background color as variables
- */
-body {
-  font-family: 'Georgia';
-  background-color: #faf9f0;
-  color: #444;
+
+header {
+  height: 77px;
+  width: 100vw;
+  position: fixed;
+  background: #fff;
+  padding-left: 30px;
+  top: 0px;
+  z-index: 1;
+  border-bottom: 1px solid #252a40;
 }
-.header {
-  font-family: 'Quicksand';
-  padding: 50px 10px;
-  color: #fff;
-  font-size: 25px;
-  text-align: center;
-  background-color: #fa5b4d;
-  border-bottom: 1px solid #df1806;
-  text-shadow: 0px -1px 0px #df1806;
-}
-.container {
-  width: 500px;
-  margin: 50px auto;
-  overflow: hidden;
-}
-.main-content {
-  float: left;
-  width: 300px;
-}
-.main-content p {
-  margin-bottom: 20px;
-}
-.sidebar {
-  float: left;
-  width: 200px;
-}
-.sidebar .widget {
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-  border: 1px solid #ccc;
-  margin-left: 20px;
-  background-color: #faf9f0;
-  -webkit-box-shadow: inset 0px 0px 0px 3px rgba(255,255,255,0.8), 0px 3px 0px -2px rgba(0,0,0,0.1);
-  box-shadow: inset 0px 0px 0px 3px rgba(255,255,255,0.8), 0px 3px 0px -2px rgba(0,0,0,0.1);
-}
-.sidebar .widget h1 {
-  font-family: 'Quicksand';
-  margin: 13px 10px 4px;
-  padding-bottom: 10px;
-  border-bottom: 1px dotted #ddd;
-  -webkit-border-radius: 2px 2px 0px 0px;
-  border-radius: 2px 2px 0px 0px;
-  margin-bottom: 10px;
-}
-.sidebar .widget p {
-  font-size: 13px;
-  padding: 0px 10px;
-  margin-bottom: 10px;
-}
-p {
-  line-height: 1.8;
-}
-footer {
-  width: 500px;
-  margin: 50px auto;
-  border-top: 1px dotted #ccc;
-  padding-top: 5px;
-  font-size: 13px;
-}
+/* ELEMENT STYLING END */
+
+
+/* SECTION X STYLING START */
+/* SECTION X STYLING END */
+
+
+/* ANONYMOUS STYLING START */
+
+/* ANONYMOUS STYLING END */

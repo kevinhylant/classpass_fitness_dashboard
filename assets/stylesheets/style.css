@@ -1,0 +1,235 @@
+/*PRIMARY COLOR SCHEME*/
+  /*  
+  Dark blue #252A40;
+    Dark grey for table/button borders: #9296A2;
+  Dark blue-purple (press section) #383e5a
+  Light CP blue #20cfb1;
+  Very light blue-purple(footer) #f4f7f9;
+    Mauve font color in footer #a1b0db;
+    Light grey font color footer #a1a1a1;
+
+  */
+
+
+
+
+/* ELEMENT STYLING START */
+body {
+  font-family: proxima-nova, sans-serif;
+  font-size: .9375em;
+  line-height: 1.2;
+  letter-spacing: .05em;
+  overflow-y: scroll;
+  height: 100%;
+  background-color: #fff;
+  color: #252a40;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: din,sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  white-space: nowrap;
+  overflow: hidden;
+  margin: 0px;
+  color: #20cfb1;
+}
+
+h1 {
+  font-size: 36px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 25px;
+}
+h4 {
+  font-size: 18px;
+}
+
+p {
+  line-height: 1.8;
+}
+ol,
+ul {
+  list-style-type: none;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  vertical-align: middle;
+}
+button {
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 2px;
+}
+a {
+  text-decoration: none;
+  color: #20cfb1;
+  transition: .3s;
+  cursor: pointer;
+}
+a:hover {
+
+}
+a img {
+  border: none;
+}
+
+header {
+  border-bottom: 1px solid #252a40;
+}
+/* ELEMENT STYLING END */
+
+
+/* SECTION NAVBAR STYLING START */
+.classpass-wrapper{
+  padding: 0 11%;
+}
+.navbar-wrapper{
+
+}
+.header{
+  height: 50px;
+  background-color: #fff;
+  padding: 0 9px;
+}
+.header-logo{
+  width: 192px;
+  height: 22px;
+  display: inline-block;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  float: left;
+}
+.header-logo a{
+  background-image: url("../images/classpass_logo.png");
+  white-space: nowrap; */
+  overflow: hidden;
+  display: block;
+  background-size: 155px 18px;
+  background-repeat: no-repeat;
+
+}
+.js-clear-filters{}
+.header-nav{
+  margin-left: 60px;
+  margin: 31px 0 0 30px;
+}
+.header-nav li {
+  display: inline-block;
+  margin-right: 30px;
+  text-transform: uppercase;
+}
+.header-nav a {
+  color: #252a40;
+}
+.header-nav a:hover {
+  color: #20cfb1;
+}
+.search-classes{}
+.browse-studios{}
+.header-btn{
+  float: right;
+} 
+
+/* SECTION NAVBAR STYLING END */
+
+/* SECTION HERO STYLING START */
+.hero {
+
+}
+.hero.hero-image{
+  background-image: image-url("../images/hero_bg.png");
+}
+.hero .wrap {
+  position: relative;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  margin-bottom: 43px;
+}
+
+.hero-title {
+  font-size: 62px;
+  font-size: 4.1333333333rem;
+  line-height: 1.1612903226;
+  font-weight: 700;
+}
+.subnav {
+
+}
+.hero_subnav {
+
+}
+.hero_content {
+  display: table-cell;
+  width: 100%;
+  vertical-align: middle;
+  text-align: center;
+}
+/* SECTION HERO STYLING END */
+
+
+/* GENERAL STYLING START */
+.wrap{
+  max-width: 1230px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+.btn{
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 18px 8px;
+  font-size: 13px;
+  font-size: .8666666667rem;
+  line-height: 1.3846153846;
+  display: inline-block;
+  padding: 7px 12px 6px;
+  vertical-align: middle;
+  font: inherit;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  border: none;
+  margin: 0;
+  cursor: pointer;
+  overflow: visible;
+  font-size: 11px;
+  font-size: .7333333333rem;
+  line-height: 1.6363636364;
+  background-color: #ff6464;
+  border-radius: 5px;
+  transition: background-color .3s;
+}
+.btn-outline-secondary{
+  background-color: transparent;
+  color: #20cfb1;
+  border: 1px solid #20cfb1;
+}
+.btn.header-btn-logged-in{
+  width: auto;
+  height: auto;
+  text-indent: 0;
+  border-width: 1px;
+  background-image: none;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-top: -8px;
+}
+
+/* GENERAL STYLING END */

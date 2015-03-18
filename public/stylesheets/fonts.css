@@ -1,0 +1,16 @@
+/* FONT FAMILY START */
+
+@font-face {
+  font-family: 'din';
+  src: url('/fonts/din-medium.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'proxima-nova';
+  src: url('/fonts/proximanova-regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* FONT FAMILY END */
