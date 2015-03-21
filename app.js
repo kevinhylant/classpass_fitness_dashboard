@@ -5,6 +5,7 @@ var express = require('express')
     ,partials = require('express-partials')
     ,is = require('is_js')
     ,ss = require('simple-statistics')
+    ,datejs = require('datejs')
     // ,asset_pipeline = require('asset-pipeline')
 
 var app = express();
@@ -93,12 +94,11 @@ app.configure(function(){
 
             // CLASS GRADE
             class_grades = {};
-            // quantity,consistency,activity_variety,studio_variety,class_variety
             calculate_quantity();
             calculate_variety_score_for('activity_type');
             calculate_variety_score_for('studio');
-            // calculate_class_variety();
-            // calculate_consistency();
+            calculate_variety_score_for('klass');
+            calculate_consistency_score();
           }
         });
 
@@ -107,18 +107,21 @@ app.configure(function(){
     // END  - API CALLS
 
 
-    activity_types = (new activity).types;
+    activity_types = ['spin','strength_training','barre','yoga','dance','pilates'];
+    weekdays = ["sunday","monday","tuesday","wednesday","thursday","friday"];
     today = new Date();
 
-    function activity() {
-      this.types = ['spin','strength_training','barre','yoga','dance','pilates'];
-    }
+    // START - PROTOTYPES 
 
-    weekdays = (new week).days;
+    Array.prototype.max = function() {
+      return Math.max.apply(null, this);
+    };
 
-    function week() {
-      this.days = ["sunday","monday","tuesday","wednesday","thursday","friday"]
-    }
+    Array.prototype.min = function() {
+      return Math.min.apply(null, this);
+    };
+
+    // END - PROTOTYPES 
 
     var generate_class_calendar = function(){
       var class_calendar = {"sunday":   []
@@ -130,7 +133,7 @@ app.configure(function(){
                              ,"saturday": []
                             }
       var weekdays = Object.keys(class_calendar);
-      for (var i in upcoming_classes ){
+      for (var i = 0 ; i < upcoming_classes.length ; i++ ){
         var start_time = new Date(upcoming_classes[i].start_time);
         upcoming_classes[i].start_time = start_time;
         for (var w in weekdays){
@@ -142,13 +145,15 @@ app.configure(function(){
       return class_calendar;
     }
     
-    var parse_class_activities = function(){
-      for(var i in completed_classes ) {
+    var parse_class_activities = function(){ 
+      for(var i = 0 ; i < completed_classes.length ; i++ ) {
         var activity_type_hash = completed_classes[i].activity_type;
-        for(var j in activity_types){
-          var type = activity_types[j];
-          if (is.not.null(activity_type_hash[type])){
-            completed_classes[i].activity_type = type;
+        for(var j = 0 ; j < activity_types.length ; j++ ){
+          var activity = activity_types[j];
+          if (typeof(activity) == 'string'){
+            if (is.not.null(activity_type_hash[activity])){
+              completed_classes[i].activity_type = activity;
+            }
           }
         }
       } 
@@ -178,64 +183,99 @@ app.configure(function(){
 
     var calculate_variety_score_for = function(type){
       var ccs_per_unique_record = {};
-      for(var i in completed_classes){
+      for(var i = 0 ; i < completed_classes.length ; i++ ){
         if (type == 'studio' || type == 'klass'){
           var curr_record = (completed_classes[i][type].name);
         }
-        else {
-          var curr_record = completed_classes[i][type];
-        }
+          else {
+            var curr_record = completed_classes[i][type];
+          }
         var current_record_count = ccs_per_unique_record[( curr_record )];
 
         if ( current_record_count > 0 ) {
           ccs_per_unique_record[( curr_record )] = (current_record_count+1);
         }
-        else {
-          ccs_per_unique_record[( curr_record )] = 1;
-        }
+          else {
+            ccs_per_unique_record[( curr_record )] = 1;
+          }
       }
       
-      var records = Object.keys(ccs_per_unique_record);
-      var completed_classes_record_type_totals = records.map(function(v) { return ccs_per_unique_record[v]; });
-      var completed_classes_breakdown_by_record_type = completed_classes_record_type_totals.map(function(v) { return (v/completed_classes_count); });
-      
+      var records = Object.keys(ccs_per_unique_record)
+         ,completed_classes_record_type_totals = records.map(function(v) { return ccs_per_unique_record[v]; })
+         ,completed_classes_breakdown_by_record_type = completed_classes_record_type_totals.map(function(v) { return (v/completed_classes_count); });
+
+      var score = 25
+         ,bonus = 0
+         ,penalty = 0;
 
       if ( type=='activity_type' ){ 
-        var score = 25,
-            bonus = 0,
-            penalty = ss.standard_deviation(completed_classes_breakdown_by_record_type);
+        var penalty = ss.standard_deviation(completed_classes_breakdown_by_record_type);
 
         if ( penalty>25 || records.length == 1 ) {penalty = 25;}
-        score = (score - penalty);
         
         if (records.length >= 2 ){bonus = 5}
-        else if (records.length >= 3 ){bonus = 8}
-        else if (records.length >= 4 ){bonus = 10}
-        else if (records.length >= 5 ){bonus = 11}
-        else if (records.length >= 6 ){bonus = 12}
-
-        score = (score + bonus);
-        if(score > 25){score=25;}
+          else if (records.length >= 3 ){bonus = 8}
+          else if (records.length >= 4 ){bonus = 10}
+          else if (records.length >= 5 ){bonus = 11}
+          else if (records.length >= 6 ){bonus = 12}
       }
-      else if ( type=='studio'){
-        console.log(records)
-        console.log(completed_classes_record_type_totals)
-        console.log(completed_classes_breakdown_by_record_type)
-      }
-      
 
+        else if ( type=='studio'){
+
+          if      (completed_classes_record_type_totals.length <= 2){penalty = 25}
+            else if (completed_classes_record_type_totals.length <= 3){penalty = 20}
+            else if (completed_classes_record_type_totals.length <= 4){penalty = 15}
+            else if (completed_classes_record_type_totals.length <= 5){penalty = 10}
+            else if (completed_classes_record_type_totals.length <= 6){penalty = 5}
+            else    {penalty = 0}
+        }
+
+        else if ( type=='klass'){
+          if      (completed_classes_record_type_totals.length <= 3){penalty = 25}
+            else if (completed_classes_record_type_totals.length <= 4){penalty = 20}
+            else if (completed_classes_record_type_totals.length <= 5){penalty = 15}
+            else if (completed_classes_record_type_totals.length <= 6){penalty = 10}
+            else if (completed_classes_record_type_totals.length <= 7){penalty = 5}
+            else    {penalty = 0}
+        }
+
+      score -= penalty;
+      score += bonus;
+      if(score > 25){score = 25;}
       class_grades[type] = score;
-      console.log(class_grades);
+
+      // console.log(class_grades);
     }
-    var calculate_studio_variety = function(){
-      // class_grades['studio_variety']
-    }
-    var calculate_class_variety = function(){
-      // class_grades['class_variety']
-    }
-    var calculate_consistency = function(){
-      
-      // class_grades['consistency'] = 
+
+    var calculate_consistency_score = function(){
+      var weekly_classes_hash = {}
+         ,score = 25
+         ,bonus = 0
+         ,penalty = 0;
+      for( var i = 0 ; i < completed_classes.length ; i++ ) {
+        var start_time = new Date(completed_classes[i].start_time);
+        completed_classes[i].start_time = start_time;
+        var week = start_time.getWeek();
+        if ( is.undefined(weekly_classes_hash[week]) ){ 
+          weekly_classes_hash[week] = 1;
+        }
+          else { weekly_classes_hash[week]++ }
+      }
+
+      var weeks = Object.keys(weekly_classes_hash)
+         ,wk_totals = weeks.map(function(v) { return weekly_classes_hash[v]; });
+
+      if(wk_totals.min() <= 1){ penalty = 20 }
+        else if(wk_totals.min() <= 2){ penalty = 10 }
+        else if(wk_totals.min() <= 3){ penalty = 4 }
+        else if(wk_totals.min() <= 4){ penalty = 2 }
+        else if(wk_totals.min() <= 5){ penalty = 0 }
+     
+      score -= penalty;
+      score += bonus;
+      if(score > 25){score = 25;}
+
+      class_grades['consistency'] = score ;  
     }
 
     var finalize_activity_score = function(completed_classes_breakdown_by_record_type){
