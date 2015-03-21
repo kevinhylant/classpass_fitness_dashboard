@@ -2,7 +2,10 @@
   "name":  "classpass_fitness_dashboard",
   "version": "0.0.1",
   "dependencies": {
-      "is_js":            "latest",    
-      "desandro/masonry": "latest"      
+      "is_js":      "latest",    
+      "masonry":    "latest",
+      "accounting": "latest",
+      "datejs":     "latest",
+      "simple-statistics":"latest"
   }
 }

@@ -7,6 +7,8 @@
     "ejs": "*",
     "request": "*",
     "asset-pipeline": "*",
-    "express-partials": "*"
+    "express-partials": "*",
+    "is_js": "*",
+    "simple-statistics": "*"
   }
 }

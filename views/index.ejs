@@ -2,13 +2,13 @@
 
   <h2>Basic User Stats</h2>
   <div>
-    Completed: <%= u_basic_stats.completed_count %>
+    Completed: <%= completed_classes_count %>
   </div>
   <div>
-    Upcoming: <%= u_basic_stats.upcoming_count %>
+    Upcoming: <%= upcoming_classes_count %>
   </div>
   <div>
-    Days Remain: 14
+    Days Remain: <span id='test'>14</span>
   </div>
   <div>
     Cycle Ends: 3/15
@@ -17,25 +17,30 @@
   <br>
 
   <h2>User Activity Breakdown</h2>
-    <div>Dance: <%= u_activities_breakdown.dance %>%</div>
-    <div>Spin: <%= u_activities_breakdown.spin %>%</div>
-    <div>Strength Training: <%= u_activities_breakdown.strength_training %>%</div>
-    <div>Yoga: <%= u_activities_breakdown.yoga %>%</div>
-    <div>Barre: <%= u_activities_breakdown.barre %>%</div>
-  
+    <div>Dance: <%=             activity_breakdown_num.dance %> | <span class='percent'><%= activity_breakdown_percent.dance %></span>%</div>
+    <div>Spin: <%=              activity_breakdown_num.spin %> | <span class='percent'><%= activity_breakdown_percent.spin %></span>%</div>
+    <div>Strength Training: <%= activity_breakdown_num.strength_training %> | <span class='percent'><%= activity_breakdown_percent.strength_training %></span>%</div>
+    <div>Yoga: <%=              activity_breakdown_num.yoga %> | <span class='percent'><%= activity_breakdown_percent.yoga %></span>%</div>
+    <div>Barre: <%=             activity_breakdown_num.barre %> | <span class='percent'><%= activity_breakdown_percent.barre %></span>%</div>
+    <div>Classes Taken: <%=     activity_breakdown_num.total %>
   <br>
 
   <h2>User Upcoming Classes</h2>
 
-    <% var today = new Date() %>
-    <% var weekdays = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'] %>
-    <% for (i in weekdays) { %>
-      <h3><%= weekdays[i]; %></h3>
-        <% for (j in u_upcoming_classes) { %>
-          <% if (u_upcoming_classes[j].weekday_num == i ) { %>
-                <div><%= u_upcoming_classes[j].studio_name %></div>
-                <div><%= u_upcoming_classes[j].class_time %></div>
-                <div><%= u_upcoming_classes[j].neighborhood %></div>
-          <% } %>
-        <% } %>
+    <!-- FINISH THIS AND REPLACE VARIABLES with class_calendar variable -->
+    
+    <% for (var i in weekdays) { %>
+      <h3><%= weekdays[i] %></h3>
+      <% var class_day = class_calendar[weekdays[i]] %>
+      <% for (var j in class_day ) { %>
+        <% var start_time = (new Date(class_day[j].start_time)).toString("hh:mm tt") %>
+        <div><%= class_day[j].studio.name %></div>
+        <div><%= class_day[j].klass.name %></div>
+        <div><%= start_time %></div>
+        <div><%= class_day[j].studio.neighborhood %></div>
+      <% } %>
     <% } %>
+    
+
+
+

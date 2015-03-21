@@ -42,7 +42,6 @@
     "commit": "a82b918e732f8435e8ccfdc9b20f05a6f71dea68"
   },
   "_source": "git://github.com/desandro/masonry.git",
-  "_target": "~3.2.2",
-  "_originalSource": "desandro/masonry",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "masonry"
 }
