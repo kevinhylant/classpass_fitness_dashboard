@@ -5,7 +5,11 @@
   <meta charset="UTF-8">
   <link rel='stylesheet', href='/stylesheets/fonts.css'>
   <link rel='stylesheet', href='/stylesheets/style.css'>
+  <link rel='stylesheet', href='/stylesheets/navbar.css'>
+  <link rel='stylesheet', href='/stylesheets/hero.css'>
   <link rel='stylesheet', href='/stylesheets/sidebar.css'>
+  <link rel='stylesheet', href='/stylesheets/fitness_dashboard.css'>
+  <link rel='stylesheet', href='/stylesheets/footer.css'>
   <title>ClassPass Fitness Dashboard</title>
 </head>
 
@@ -46,9 +50,8 @@
       <div class="wrap">
         <div class="hero-content">
           <p class="hero-title">Welcome back, <%= sample_user.first_name %></p>
-          </div>
         </div>
-        <nav class="subnav hero-subnav">
+        <nav class="subnav rec-subnav">
           <ul>
             <li><a class="active" href="/fitness-dashboard">Dashboard</a></li>
             <li><a href="/fitness-dashboard">Upcoming</a></li>
@@ -61,54 +64,128 @@
     </div>
 
     <div class="wrap">
-      <div class="grid grid--rev"> 
-        <div class="grid__item md-3/12 hidden md-inline-block">
+      <div class="grid grid-rev"> 
+        <div class="grid-item md-3 md-inline-block">
           <aside>
             <div class="user-specs">
-              <div class="avatar user-specs__avatar">
+              <div class="avatar user-specs-avatar">
                 <div>K
                 </div>
               </div>
-              <div class="user-specs__header">
-                <h3 class="delta">Kevin Hylant</h3>
+              <div class="user-specs-header">
+                <h3 class="delta">
+                  <%= sample_user.first_name %> 
+                  <%= sample_user.last_name %>
+                </h3>
                 <p>New York</p>
               </div>
               <ul>
-                <li><strong>1</strong> Upcoming</li>
-                <li><strong>41</strong> Completed</li>
+                <li><strong>
+                  <%= completed_classes_count %>
+                </strong> Upcoming</li>
+                <li><strong>
+                  <%= upcoming_classes_count %>
+                </strong> Completed</li>
                 <li><strong>4/15</strong> Cycle Ends</li>
                 <li><strong>28</strong>Days Remaining</li>
               </ul>
             </div>
+
+            <div class='inspirational-quote'>
+              <ul>
+                <li class='big-quote top-quote'>
+                  "
+                </li>
+                <li class='big-quote bottom-quote'>
+                  "
+                </li>
+                <li class='quote-text'>
+                  <p>
+                  <span class="dark-bg">Remember when you see a</span>
+                  <span class="dark-bg">man at the top of a mountain,</span>
+                  <span class="dark-bg">he did not fall there.</span>
+                  </p>
+                </li>
+                <li>
+                  <div class='md-6'>
+                    <ul>
+                      <li class='signature'><h4>~Justin Chang</h4></li>
+                    </ul>
+                  </div>
+                  <div class='md-6'>
+                    <ul>
+                      <li class='quote-image'>
+                      </li>
+                      <li class='quote-hashtag'>
+                        <h5>#thesweatylife</h5>
+                      </li>
+                      
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+                  
+                </ul>
+              </div>
+              
+            </div>
+
           </aside>
         </div>
 
-        <div class="grid__item md-9/12">
+        <div class="grid-item md-9">
           <section>
             <%- body %>
-          </section>
-        </div>
+          
       </div>
     </div>
 
 
-
-
-
-  <footer class='classpass-wrapper'>
-    <div class='med-4'>
-      <h5 class='footer-section-title'>LEARN MORE</h5>
-    </div>
-    <div class='med-4'>
-      <h5 class='footer-section-title'>CONNECT</h5>
-    </div>
-    <div class='med-4'>
-      <h5 class='footer-section-title'>WANT MORE CLASSPASS?</h5>
-    </div>
-    <div class='footer_copyright'>
-      '© 2015 ClassPass, Inc., 114 West 26th Street, New York, NY, Contact us at info@classpass.com'
+  <footer class="footer">
+    <div class="wrap">
+      <div class="grid footer-links">
+        <div class="grid-item md-4">
+          <h5>Learn More</h5>
+          <div class="footer-learn-more">
+            <div class="grid">
+              <div class="grid-item md-4">
+                <ul>
+                  <li><a href="http://blog.classpass.com" rel="external">Blog</a></li>
+                  <li><a href="/contact">Contact</a></li>
+                  <li><a href="/faq">FAQ</a></li>
+                </ul>
+              </div>
+              <div class="grid-item md-4">
+                <ul>
+                  <li><a href="/jobs">Jobs</a></li>
+                  <li><a href="/partners">Partners</a></li>
+                  <li><a href="/press">Press</a></li>
+                </ul>
+              </div>
+              <div class="grid-item md-4">
+                <ul>
+                  <li><a href="/privacy">Privacy</a></li>
+                  <li><a href="/about">About</a></li>
+                  <li><a href="/terms">Terms</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-item md-4">
+          <h5>Connect</h5>
+        </div>
+        <div class="grid-item md-4">
+          <h5>Want more ClassPass?</h5>
+          <p><a rel="external" href="https://itunes.apple.com/us/app/classpass/id912947244?mt=8&amp;uo=4">Download ClassPass for iPhone</a></p>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        <p>© 2015 ClassPass, Inc., 114 West 26th Street, New York, NY, Contact us at <a href="mailto:info@classpass.com" onclick="window.open('https://mail.google.com/mail/?view=cm&amp;tf=1&amp;to=info@classpass.com&amp;cc=&amp;bcc=&amp;su=&amp;body=','_blank');return false;">info@classpass.com</a></p>
+      </div>
     </div>
   </footer>
+  
 </body>
 
 </html>

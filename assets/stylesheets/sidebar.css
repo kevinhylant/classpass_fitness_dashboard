@@ -1,0 +1,181 @@
+/* SECTION SIDEBAR STYLING START */
+
+/* BASIC STATS SECTION START */
+.grid{
+  list-style: none;
+  margin: 0 0 0 -30px;
+}
+.grid-item.md-9{
+  position: relative;
+  float: left;
+}
+.grid-rev{
+  padding: 0;
+  text-align: left;
+}
+.grid-rev.grid-item{
+  direction: ltr;
+  text-align: left;
+}
+.grid-item{
+  display: inline-block;
+  padding-left: 30px;
+  vertical-align: top;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+.md-inline-block{
+  display: inline-block;
+  position: relative;
+  float: left;
+}
+.user-specs{
+  position: relative;
+  padding-top: 90px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-size: .8rem;
+  line-height: .8;
+  letter-spacing: .1em;
+  background-color: #edf2f5;
+}
+
+.user-specs ul {
+  padding: 36px 18px 240px;
+  background-color: #f4f7f9;
+}
+.user-specs li {
+  margin-bottom: 25px;
+}
+.user-specs strong{
+  display: block;
+  margin: 0px 0px 5px;
+  font-size: 45px;
+  font-size: 3rem;
+  line-height: 1.2;
+  font-family: din,sans-serif;
+  color: #a1b0db;
+}
+.avatar{
+  position: relative;
+  overflow: hidden;
+  font-family: din,sans-serif;
+  color: #fff;
+  background-color: #383e5a;
+  border-radius: 50%;
+}
+.user-specs-avatar{
+  position: absolute;
+  top: -135px;
+  left: 50%;
+  -webkit-transform: translate(-50%,0);
+  -ms-transform: translate(-50%,0);
+  transform: translate(-50%,0);
+  width: 198px;
+  height: 198px;
+  border: 8px solid #fff;
+  margin-bottom: 36px;
+}
+.avatar>div{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  vertical-align: middle;
+  text-align: center;
+  font-size: 62px;
+  font-size: 4.13333rem;
+}
+.delta{
+  font-size: 25px;
+  font-size: 1.66667rem;
+  line-height: 1.44;
+  letter-spacing: .05em;
+}
+/* BASIC STATS SECTION END */
+
+/* INSPIRATION QUOTE SECTION START */
+.md-8 {
+  width: 66.66%;
+  direction: ltr;
+  text-align: left;
+  float: left;
+}
+.inspirational-quote{
+  background-image: url("http://blog.stjosephinstitute.com/wp-content/uploads/2014/01/mountain-climber-silhouette2.jpg");
+  box-sizing: border-box;
+  position: relative;
+  background-position: 50%;
+  background-size: cover;
+  height: 200px;
+  padding: 20px;
+  color: #252a40;
+  opacity: 0.9;
+}
+.inspirational-quote>div{
+  height: 100%;
+}
+.inspiration-quote .shade{
+  background-color: #252A40;
+  opacity: .5;
+}
+.quote-text{
+  font-size: 1.2vw;
+  padding-top: 25px;
+}
+.quote-text p{
+  color: #fff;
+}
+.quote-text .dark-bg{
+  background-color: #252a40;
+  padding: 6px 3px;
+}
+
+.big-quote{
+  position: absolute;
+  color: #20cfb1;
+  font-size: 70px;
+  line-height: 0px;
+}
+.big-quote.top-quote{
+  left: 10px;
+  top: 43px;
+}
+.big-quote.bottom-quote{
+  bottom: 3px;
+  right: 8px;
+}
+.quote-image{
+  background-image: url("https://media.licdn.com/mpr/mpr/shrink_200_200/p/3/000/0a2/007/1d5cf0c.jpg");
+  height: 3.5vw;
+  width: 3.5vw;
+  border-color: #fff;
+  border-width: 2px;
+  border-radius: 5vw;
+  background-position: 50%;
+  background-size: cover;
+  border-style: solid;
+  position: absolute;
+  bottom: 33px;
+  right: 38px;
+}
+.signature{
+  margin-top: 5px;
+}
+.quote-hashtag{
+  color: #20cfb1;
+  position: absolute;
+  bottom: 10px;
+  right: 35px;
+  
+}
+
+
+/* INSPIRATION QUOTE SECTION END */
+
+/* SECTION SIDEBAR STYLING END */

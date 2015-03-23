@@ -36,10 +36,12 @@ app.configure(function(){
         ,activity_breakdown_num : activity_breakdown_num
         ,activity_breakdown_percent : activity_breakdown_percent
         ,activity_types : activity_type_options
+        ,sample_user : sample_user
         ,class_calendar : class_calendar
+        ,class_grades : class_grades
+        ,sorted_recommendations : sorted_recommendations
         ,weekdays : weekdays
         ,today : today
-        ,sample_user : sample_user
         }
       );
     })
@@ -61,7 +63,7 @@ app.configure(function(){
   // START - DATA MODELING
   
     // START - API CALLS
-      
+      test = 'test'
       var api_domain = 'http://localhost:9393/api';
       var sample_user_endpoint = api_domain+"/users/sample-user";
 
@@ -107,6 +109,7 @@ app.configure(function(){
 
                   // CLASS GRADE
                   class_grades = {};
+                  class_grades['total'] = 0;
                   calculate_quantity();
                   calculate_variety_score_for('activity_type');
                   calculate_variety_score_for('studio');
@@ -121,13 +124,7 @@ app.configure(function(){
                 if (!err && response.statusCode == 200) {
                   console.log('calling studios endpoint');
                   studios = JSON.parse(body);
-                  console.log(studios.length);
                   parse_recommended_studios();
-
-                  
-                  
-                  // parse_advanced_preferences(); // give 25 points for each studio within 1 point of each of 4 scores, sort by most points
-                  // from the top-rated studios, parse to only those that meet user preferences
                 }
               });
             }();
@@ -145,7 +142,7 @@ app.configure(function(){
     studio_counter = 0;
     recommended_studios            = [];
     top_studio_reservations_counts = [];
-    top_ratings_match_scores       = [];
+    top_user_dissimilarity_indexes     = [];
     weekdays = ["sunday","monday","tuesday","wednesday","thursday","friday"];
     activity_type_options = ['spin','strength_training','barre','yoga','dance','pilates'];
     time_preference_options = ['after_work','before_work','during_lunch'];
@@ -210,27 +207,74 @@ app.configure(function(){
       }); 
     };
     
-    
+    Studio.allInstances = [];
+
+    var sortStudiosByRecScoreAsc = function(rec_score_function) {
+      return function(a, b) {
+        return a[rec_score_function]() - b[rec_score_function]();
+      };
+    };
+    var sortStudiosByRecScoreDesc = function(rec_score_function) {
+      return function(a, b) {
+        return b[rec_score_function]() - a[rec_score_function]();
+      };
+    };
 
     function Studio(self){
-      this.attributes           = self;
-      this.avg_rating           = 0;
-      this.reservation_count    = 0;
-      this.hidden_gem_score     = 0;
-      this.popularity_score     = (this.avg_rating*2);
-      this.advanced_ratings_match_score = 0;
-      this.recommendation_score = (this.hidden_gem_score
-                                  +this.popularity_score
-                                  +this.advanced_ratings_match_score);
-      this.avg_advanced_ratings = function(){
-        
-      }
-    }
+      Studio.allInstances.push      (this);
+      this.attributes               = self;
+      this.avg_rating               = 0;
+      this.reservation_count        = 0;
+      this.hidden_gem_score         = 0;
+      this.user_similarity_score    = 0;
+      this.user_dissimilarity_index = 0;
+      this.popularity_score         = function(){
+        return (this.avg_rating*2);
+      };
+      this.recommendation_score     = function(){
+        var sum = (this.hidden_gem_score
+        +this.user_similarity_score
+        +this.popularity_score());
+        return sum;
+      };
+      this.avg_advanced_ratings     = function(){
+        ratings_counts_hash   = {};
+        ratings_totals_hash   = {};
+        avg_adv_ratings_hash  = {};
 
-    .hidden_gem_score);
-        console.log("popularity score "+curr_studio.popularity_score);
-        console.log("matches advanced ratings score "+curr_studio.advanced_ratings_match_score);
-        console.log("recommendation score "+curr_studio.rec
+        var klasses = this.attributes.klasses;
+        for( var i = 0 ; i < klasses.length ; i++ ){
+          var scheduled_classes = klasses[i].scheduled_classes;
+          for ( var j = 0 ; j < scheduled_classes.length ; j++ ){
+            var ratings = scheduled_classes[j].ratings;
+            for (var x = 0 ; x < ratings.length ; x++ ){
+              curr_rating = ratings[x];
+              for (var y = 0 ; y < advanced_rating_options.length ; y++){
+                var option = advanced_rating_options[y];
+                var rating_number = curr_rating[option];
+                if (is.undefined(ratings_totals_hash[option])){ 
+                  ratings_totals_hash[option] = 0;
+                  ratings_counts_hash[option] = 0;
+                }
+                ratings_totals_hash[option] += rating_number;
+                ratings_counts_hash[option] ++ ;
+              }
+            }
+          }
+        }
+        for (var i = 0 ; i < advanced_rating_options.length ; i++){
+          var option           = advanced_rating_options[i];
+          var sum_for_option   = parseFloat(ratings_totals_hash[option]);
+          var count_for_option = ratings_counts_hash[option];
+          var avg_for_option   = (sum_for_option/count_for_option);
+          avg_adv_ratings_hash[option] = avg_for_option;
+        }
+        return avg_adv_ratings_hash;
+      }
+    };
+
+    
+        
 
     function User(self){
       this.attributes = self;
@@ -300,23 +344,23 @@ app.configure(function(){
     var calculate_activities_breakdown = function(){
       activity_breakdown_num = {};
       activity_breakdown_percent = {};
-      activity_breakdown_num['total'] = 0;
       for(var i in activity_type_options){activity_breakdown_num[activity_type_options[i]] = 0 ;}
+      
       for(var i in completed_classes) {
-        activity_breakdown_num['total']++;
         var activity_type = completed_classes[i]['activity_type'];
         activity_breakdown_num[activity_type]++ ;
       }
       for(var i in activity_type_options){
         var activity = activity_type_options[i];
-        activity_breakdown_percent[activity] = (activity_breakdown_num[activity]/activity_breakdown_num['total'])*100;
+        activity_breakdown_percent[activity] = (activity_breakdown_num[activity]/completed_classes.length)*100;
       }
     } 
 
     var calculate_quantity = function(){
       var score = completed_classes_count*(rubric.quantity);
-      if(score > 25){score=25;}
+      if(score > max_points){score = max_points;}
       class_grades['quantity'] = score;
+      class_grades['total'] += score;
     }
 
     var calculate_variety_score_for = function(type){
@@ -342,51 +386,51 @@ app.configure(function(){
          ,completed_classes_record_type_totals = records.map(function(v) { return ccs_per_unique_record[v]; })
          ,completed_classes_breakdown_by_record_type = completed_classes_record_type_totals.map(function(v) { return (v/completed_classes_count); });
 
-      var score = 25
-         ,bonus = 0
+      var score = max_points
          ,penalty = 0;
 
       if ( type=='activity_type' ){ 
-        var penalty = ss.standard_deviation(completed_classes_breakdown_by_record_type);
+        // 50% of score based on activity type consistency (standard deviation of percentage makeup)
+        var penalty = (ss.standard_deviation(completed_classes_breakdown_by_record_type))/2.0;
 
-        if ( penalty>25 || records.length == 1 ) {penalty = 25;}
+        if ( penalty > 12.5 || records.length == 1 ) {penalty = 12.5;}
         
-        if (records.length >= 2 ){bonus = 5}
-          else if (records.length >= 3 ){bonus = 8}
-          else if (records.length >= 4 ){bonus = 10}
-          else if (records.length >= 5 ){bonus = 11}
-          else if (records.length >= 6 ){bonus = 12}
+        // 50% of score based on quantity of unique activities
+        if        (records.length < 2 ){penalty += 12.5}
+          else if (records.length < 3 ){penalty += 8}
+          else if (records.length < 4 ){penalty += 4}
+          else if (records.length < 5 ){penalty += 2}
+          else if (records.length < 6 ){penalty += 0}
       }
 
         else if ( type=='studio'){
 
-          if      (completed_classes_record_type_totals.length <= 2){penalty = 25}
-            else if (completed_classes_record_type_totals.length <= 3){penalty = 20}
-            else if (completed_classes_record_type_totals.length <= 4){penalty = 15}
-            else if (completed_classes_record_type_totals.length <= 5){penalty = 10}
-            else if (completed_classes_record_type_totals.length <= 6){penalty = 5}
+          if        (completed_classes_record_type_totals.length <= 2){penalty = 20}
+            else if (completed_classes_record_type_totals.length <= 3){penalty = 15}
+            else if (completed_classes_record_type_totals.length <= 4){penalty = 10}
+            else if (completed_classes_record_type_totals.length <= 5){penalty = 5}
+            else if (completed_classes_record_type_totals.length <= 6){penalty = 3}
             else    {penalty = 0}
         }
 
         else if ( type=='klass'){
-          if      (completed_classes_record_type_totals.length <= 3){penalty = 25}
-            else if (completed_classes_record_type_totals.length <= 4){penalty = 20}
-            else if (completed_classes_record_type_totals.length <= 5){penalty = 15}
-            else if (completed_classes_record_type_totals.length <= 6){penalty = 10}
-            else if (completed_classes_record_type_totals.length <= 7){penalty = 5}
+          if        (completed_classes_record_type_totals.length <= 3){penalty = 20}
+            else if (completed_classes_record_type_totals.length <= 4){penalty = 15}
+            else if (completed_classes_record_type_totals.length <= 5){penalty = 10}
+            else if (completed_classes_record_type_totals.length <= 6){penalty = 5}
+            else if (completed_classes_record_type_totals.length <= 7){penalty = 3}
             else    {penalty = 0}
         }
 
       score -= penalty;
-      score += bonus;
-      if(score > 25){score = 25;}
+      if(score > 20){score = 20;}
       class_grades[type] = score;
+      class_grades['total'] += score;
     }
 
     var calculate_consistency_score = function(){
       var weekly_classes_hash = {}
-         ,score = 25
-         ,bonus = 0
+         ,score = 20
          ,penalty = 0;
       for( var i = 0 ; i < completed_classes.length ; i++ ) {
         var start_time = new Date(completed_classes[i].start_time);
@@ -401,26 +445,19 @@ app.configure(function(){
       var weeks = Object.keys(weekly_classes_hash)
          ,wk_totals = weeks.map(function(v) { return weekly_classes_hash[v]; });
 
-      if(wk_totals.min() <= 1){ penalty = 20 }
+      if(wk_totals.min() <= 1){ penalty = 15 }
         else if(wk_totals.min() <= 2){ penalty = 10 }
         else if(wk_totals.min() <= 3){ penalty = 4 }
         else if(wk_totals.min() <= 4){ penalty = 2 }
         else if(wk_totals.min() <= 5){ penalty = 0 }
      
       score -= penalty;
-      score += bonus;
-      if(score > 25){score = 25;}
+      if(score > max_points){score = max_points;}
 
-      class_grades['consistency'] = score ;  
+      class_grades['consistency'] = score ;
+      class_grades['total'] += score;  
     }
 
-    var finalize_activity_score = function(completed_classes_breakdown_by_record_type){
-      var raw_point_tot = completed_classes_breakdown_by_record_type.reduce(function(prev, curr) {
-          return prev * curr;     // raw points equal the product of each activity type's composition of the total
-        }); 
-      var score = (raw_point_tot*(rubric.activity_variety));
-      return score;
-    }
 
     var rubric = {
       'quantity'        : 1,    // points per class 
@@ -430,7 +467,7 @@ app.configure(function(){
       'consistency'     : 0.5     
     }
 
-    var point_max_per_category = 25;
+    var max_points = 20;
 
     var parse_recommended_studios = function(){
       studio_activity_types = []
@@ -499,7 +536,6 @@ app.configure(function(){
             if (points > 0){points--;}
           }
         }
-        if (i == (top_studio_reservations_counts.length-1)){console.log(recommended_studios)}
       }
 
       for (var i = 0 ; i < recommended_studios.length ; i++){
@@ -507,24 +543,33 @@ app.configure(function(){
         
         var curr_studio = recommended_studios[i];
         curr_studio.avg_advanced_ratings();
-        sum_total = 0; //sum_total_differences_btwn_adv_pref_and_avg_studio_ratings
+        sum_of_differences = 0; //sum_total_differences_btwn_adv_pref_and_avg_studio_ratings
+        curr_studio.avg_advanced_ratings();
         for (var j = 0 ; j < advanced_rating_options.length ; j++) {
-          var curr_option = advanced_rating_options[j];
-          avg_advanced_ratings = curr_studio.avg_advanced_ratings;
-          
-          var user_pref = sample_user_advanced_preferences[curr_option];
-          var studio_avg = avg_advanced_ratings[curr_option];
-          var user_studio_difference = Math.abs(user_pref - studio_avg);
-          sum_total += user_studio_difference;
+          var option = advanced_rating_options[j];
+          var user_pref = sample_user_advanced_preferences[option];
+          var studio_avg = avg_adv_ratings_hash[option];
+          var curr_option_difference = Math.abs(user_pref - studio_avg);
+          sum_of_differences += curr_option_difference;
         }
-        top_ratings_match_scores.push(sum_total);
-    // NOW ADD POINT TOTALS BASED ON RANKING
-      }
+        curr_studio.user_dissimilarity_index = sum_of_differences;
+        top_user_dissimilarity_indexes.push(sum_of_differences);
 
-        console.log("hidden gem score "+curr_studio.hidden_gem_score);
-        console.log("popularity score "+curr_studio.popularity_score);
-        console.log("matches advanced ratings score "+curr_studio.advanced_ratings_match_score);
-        console.log("recommendation score "+curr_studio.recommendation_score);
+    // NOW ADD POINT TOTALS BASED ON RANKING
+
+      }
+      top_user_dissimilarity_indexes = top_user_dissimilarity_indexes.sortNumbersAsc().uniq();
+      for( var i = 0, points = 10 ; i < top_user_dissimilarity_indexes.length ; i++ ){
+        var curr_lowest_dissimilarity_index = top_user_dissimilarity_indexes[i];
+        for( var j = 0 ; j < recommended_studios.length ; j++ ){
+          var curr_studio = recommended_studios[j];
+          if (curr_studio.user_dissimilarity_index == curr_lowest_dissimilarity_index ){
+            curr_studio.user_similarity_score += points;
+            if (points > 0){points--;}
+          }
+        }
+      }
+      sorted_recommendations = (recommended_studios.sort(sortStudiosByRecScoreDesc('recommendation_score')));
     }  
   // END   - DATA MODELING
 

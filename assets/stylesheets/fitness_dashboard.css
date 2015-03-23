@@ -1,0 +1,262 @@
+/* MAIN SECTION STYLING START */
+
+/* LAST MONTH OVERVIEW START */
+.last-month-stats-wrapper{
+  margin-bottom: 14px;
+}
+
+.avatar-small{
+  height: 100%;
+  width: 100%;
+  border-width: 2px;
+  top: 50%;
+  background-color: #20cfb1
+}
+.friends-list{
+  padding: 0px;
+  height: 102px;
+  margin-bottom: 10px;
+}
+.fitness-dash-title{
+  text-align: center;
+  padding-bottom: 40px;
+  clear: both;
+}
+.fitness-dash-title h3{
+  color: #20cfb1;
+}
+
+.activity-stat-list{
+  color: #fff;
+}
+.activity-stat-num{
+  display: block;
+  margin: 0 auto;
+  font-size: 45px;
+  font-size: 3rem;
+  line-height: 1.2;
+  font-family: din,sans-serif;
+  width: 100%;
+  transition: .3s;
+}
+
+.percent-symbol{
+  font-size: 18px;
+  font-size: 1.2rem;
+}
+
+.activity-stat-square{
+  float: left;
+  position: relative;
+  height: 0;
+  margin: 0px 0.3%;
+}
+
+.activity-stat-list .md-11-100{
+  background-color: #383e5a;
+}
+.md-6-100{
+  width: 6%;
+  padding-bottom: 6%;
+  margin-right: 3%;
+}
+.md-11-100{
+  width: 10.7%;
+  padding-bottom: 12%;
+}
+.md-11-100:hover{
+  color: #252A40;
+  background-color: #edf2f5;
+}
+.md-11-100.inverse{
+  color: #252A40;
+  background-color: #edf2f5;
+}
+.md-11-100.inverse:hover{
+  background-color: #383e5a;
+  color: #fff;
+}
+/* LAST MONTH OVERVIEW END */
+
+
+
+/* RECOMMENDED STUDIOS START */
+.recommended-studios-wrapper{
+  margin-bottom: 50px;
+}
+
+.recommended-list{}
+.js-favorites-list{}
+.rec-title{
+  padding-bottom: 15px;
+}
+.rec-subnav {
+  width: auto;
+  left: 25%;
+  margin-left: 24px;
+  bottom: 0;
+  height: auto;
+  padding: 0;
+  background-color: transparent;
+}
+.rec-subnav a {
+  margin-right: 25px;
+  color: #252A40;
+}
+.rec-description{
+  padding: 5px 0px 20px;
+}
+.square{
+  position: relative;
+  width: 100%;
+}
+.square:before {
+  padding-bottom: 100%;
+  content: "";
+  display: block;
+}
+.square-centered{}
+.square-centered .square-content {
+  z-index: 100;
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translate(0,-50%);
+  -ms-transform: translate(0,-50%);
+  transform: translate(0,-50%);
+  text-align: center;
+}
+.recommended-item{
+  margin-bottom: 30px;
+  position: relative;
+  color: #fff;
+  background-position: 50%;
+  background-size: cover;
+}
+.recommended-item h2 {
+  margin-bottom: 18px;
+  font-weight: 400;
+}
+.recommended-item p {
+  margin-bottom: 0;
+}
+.recommended-item:after{
+  z-index: 0;
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(56,62,90,.5);
+}
+.square-content{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 18px;
+
+}
+.gamma{
+  font-size: 32px;
+  font-size: 2.13333rem;
+  line-height: 1.125;
+  letter-spacing: .05em;
+}
+.gamma a {
+  color: white;
+}
+
+.gamma a:hover{
+  color: #20cfb1;
+}
+
+.square.studio-bg-1 {
+  background-image: url('http://cdn.classtivity.com/images/288/288150/66c6_428.jpg');
+}
+.square.studio-bg-2 {
+  background-image: url('http://cdn.classtivity.com/images/275/275298/5wf6_274.png');
+}
+.square.studio-bg-3 {
+  background-image: url('http://cdn.classtivity.com/images/275/275300/5wf8_958.png');
+}
+.square.studio-bg-4 {
+  background-image: url('http://cdn.classtivity.com/images/275/275722/5wqy_120.png');
+}
+.square.studio-bg-5 {
+  background-image: url('http://cdn.classtivity.com/images/274/274163/5vjn_446.png');
+}
+.square.studio-bg-6 {
+  background-image: url('http://cdn.classtivity.com/images/274/274394/5vq2_891.png');
+}
+
+/* RECOMMENDED STUDIOS END */
+
+/* CLASS CALENDAR START */
+.class-calendar-wrapper{
+  /*margin-bottom: 14px;*/
+}
+.class-calendar{
+  color: #fff;
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-color: #252A40;
+  border-bottom-width: 10px;
+  float: left;
+}
+
+.md-14-100{
+  width: calc(13.9vw + 12px);
+  padding-bottom: calc(13.9vw + 12px);
+}
+
+.class-calendar-tile{
+  float: left;
+  position: relative;
+  height: 0;
+  margin: 0px;
+}
+
+.weekday-title{
+  height: 2.5vw;
+  background-color: #20cfb1;
+  padding: 6px;
+  text-align: center;
+  border-right-style: solid;
+  border-left-style: solid;
+  border-width: 2px;
+}
+.class-details{
+  height: calc(13.9vw - 2.5vw );
+  background-color: #edf2f5;
+  border-left-style: solid;
+  border-right-style: solid;
+  border-width: 2px;
+  border-color: #fff;
+
+}
+.class-details li{
+  color: #252A40;
+}
+.class-details li.title{
+  font-weight: 400;
+}
+.class-details a:hover{
+  color: #20cfb1; 
+}
+
+/* CLASS CALENDAR END */
+
+.push-left-50{
+  margin-left: 35px;
+}
+
+/* MAIN SECTION STYLING END */
+
+
+
+
+
+
+

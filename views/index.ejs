@@ -1,46 +1,159 @@
 
+      
+      <div class='last-month-stats-wrapper'>
+        <h1 class="fitness-dash-title">Last Month</h1>
+        <ul class='friends-list'>
+          <li>
+            <div class="activity-stat-list">
+              <div class="md-6-100 activity-stat-square">
+                <div class="avatar user-specs-avatar center avatar-small">
+                  <div class='center'>
+                    <h3><%= sample_user.first_name[0]; %></h3>
+                  </div>
+                </div>
+              </div>
+              <div class="md-11-100 activity-stat-square inverse">
+                <div class='center'>
+                  <h3>Grade</h3>
+                  <div id='class-grade-total' class='activity-stat-num'><%= class_grades.total %></div>
+                  <ul class='hidden'>
+                    <li>Quantity: <%= class_grades.quantity %>/20</li>
+                    <li>Activity Type Variety: <%= class_grades.activity_type %>/20</li>
+                    <li>Studio Variety: <%= class_grades.studio %>/20</li>
+                    <li>Class Type Variety: <%= class_grades.klass %>/20</li>
+                    <li>Consistency: <%= class_grades.consistency %>/20</li>
+                  </ul>
+                </div>
+              </div>
 
-  <h2>Basic User Stats</h2>
-  <div>
-    Completed: <%= completed_classes_count %>
-  </div>
-  <div>
-    Upcoming: <%= upcoming_classes_count %>
-  </div>
-  <div>
-    Days Remain: <span id='test'>14</span>
-  </div>
-  <div>
-    Cycle Ends: 3/15
-  </div>
-  
-  <br>
+              <% for( var i=0 ; i < activity_types.length ; i++ ) { %>
+                <% var activity = activity_types[i]; %>
+                <% var activity_name = activity %>
+                <% if (activity == "strength_training"){activity_name="strength";} %>
+                <div class="md-11-100 activity-stat-square">
+                  <div class='center'> 
+                    <div class='activity-stat-num'>
+                      <div class="orig-fields">
+                        <h3><%= activity_name %></h3>
+                        <span class='percent'><%= activity_breakdown_percent[activity] %></span><span class='percent-symbol'>%</span>
+                      </div>
+                      <div class="hover-fields hidden">
+                        <h3>Classes</h3>
+                        <div><%= activity_breakdown_num[activity] %></div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              <% } %>
 
-  <h2>User Activity Breakdown</h2>
-    <div>Dance: <%=             activity_breakdown_num.dance %> | <span class='percent'><%= activity_breakdown_percent.dance %></span>%</div>
-    <div>Spin: <%=              activity_breakdown_num.spin %> | <span class='percent'><%= activity_breakdown_percent.spin %></span>%</div>
-    <div>Strength Training: <%= activity_breakdown_num.strength_training %> | <span class='percent'><%= activity_breakdown_percent.strength_training %></span>%</div>
-    <div>Yoga: <%=              activity_breakdown_num.yoga %> | <span class='percent'><%= activity_breakdown_percent.yoga %></span>%</div>
-    <div>Barre: <%=             activity_breakdown_num.barre %> | <span class='percent'><%= activity_breakdown_percent.barre %></span>%</div>
-    <div>Classes Taken: <%=     activity_breakdown_num.total %>
-  <br>
+              <div class="md-11-100 activity-stat-square inverse">
+                <div class='center'> 
+                  <h3>Classes</h3>
+                  <div class='activity-stat-num'>
+                    <div><%= completed_classes.length %></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
 
-  <h2>User Upcoming Classes</h2>
+        </ul>
+      </div>
 
-    <!-- FINISH THIS AND REPLACE VARIABLES with class_calendar variable -->
+      <div class='line-divider'>
+        <hr>
+      </div>
+
+      <div class="recommended-studios-wrapper">
+        <div class='fitness-dash-title rec-title'>
+          <h1>Recommended Studios</h1>
+          
+          <h4 class='rec-description'>top-rated & selected to best match your preferences</h4>
+          
+          <nav class="subnav rec-subnav">
+            <ul>
+              <li><a class="active" href="#">Before Work</a></li>
+              <li><a href="#">During Lunch</a></li>
+              <li><a href="#">After Work</a></li>
+            </ul>
+          </nav>
+
+          
+        </div>
+
+        <div class="grid grid-rev push-left-50">
+          <div class="grid-item">
+            <section>
+              <ul class="grid recommended-list js-recommended-list">
+              <% for (var i = 0 ; i < 6 ; i++){ %>
+                <li class="grid-item md-4">
+                  <div class="square square-centered recommended-item studio-bg-<%= i+1 %>">
+                    <div class="square-content">
+                      <h2 class="gamma"><a href="#">
+                        <%= sorted_recommendations[i].attributes.name %>
+                      </a></h2>
+                      <p>
+                        <%= sorted_recommendations[i].attributes.neighborhood %>
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              <% } %>
+              </ul>
+            </section>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class='line-divider'>
+        
+      </div>
+
+  </section> <!-- END OF MAIN 9/12 SECTION -->
+</div>
+
+<section
+  <div class='class-calendar-wrapper'>
+    <h1 class="fitness-dash-title">This Week</h1>    
     
-    <% for (var i in weekdays) { %>
-      <h3><%= weekdays[i] %></h3>
-      <% var class_day = class_calendar[weekdays[i]] %>
-      <% for (var j in class_day ) { %>
-        <% var start_time = (new Date(class_day[j].start_time)).toString("hh:mm tt") %>
-        <div><%= class_day[j].studio.name %></div>
-        <div><%= class_day[j].klass.name %></div>
-        <div><%= start_time %></div>
-        <div><%= class_day[j].studio.neighborhood %></div>
+    <div class="class-calendar">
+      <% for (var i = 0 ; i < weekdays.length ; i++ ) { %>
+        <div class="md-14-100 class-calendar-tile">
+          
+            <div class="weekday-title">
+              <h3><%= weekdays[i] %></h3>
+            </div>
+            <div class="class-details">
+              <% var curr_day_classes = class_calendar[weekdays[i]] %>
+              <% for (var j = 0 ; j < curr_day_classes.length ; j++ ) { %>
+                <% var clas = curr_day_classes[j]; %>
+                <% if (clas != 'undefined') { %>
+                  <% var start_time = (new Date(clas.start_time)).toString("hh:mm tt") %>
+                  <ul class='class-details'>
+                    <li class='gamma'><h3><a href="#">
+                      <%= clas.studio.name %>
+                      </a></h3></li>
+                    <li><%= clas.klass.name %></li>
+                    <li><%= start_time %></li>
+                    <li><%= clas.studio.neighborhood %></li>
+                  </ul>
+                <% } %>
+              <% } %>
+            </div>
+          
+        </div>
       <% } %>
-    <% } %>
-    
+    </div>     
+  </div>
+
+</section>
+
+
+
+
 
 
 
