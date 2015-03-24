@@ -23,6 +23,7 @@ app.configure(function(){
   app.use(partials());
 
 
+
   // START - ROUTES
     app.get('/', function (req, res){
       res.render('welcome', 
@@ -51,6 +52,7 @@ app.configure(function(){
   // END - ROUTES
 
 
+
   // START - APP ASSET CONFIG
     app.use('/stylesheets', express.static(__dirname + '/assets/stylesheets'));
     app.use('/javascripts', express.static(__dirname + '/assets/javascripts'));
@@ -59,9 +61,12 @@ app.configure(function(){
     app.use('/bower_components', express.static(__dirname + '/bower_components'));
   // END   - APP ASSET CONFIG
 
+
   app.listen(3000)
   console.log('Express app started on port 3000');
 });
+
+
 
   // START - DATA MODELING
   
@@ -136,9 +141,9 @@ app.configure(function(){
         });
       }();
 
-
     // END  - API CALLS
     
+
 
     today = new Date();
     min_rating     = 3.0;
@@ -150,6 +155,8 @@ app.configure(function(){
     activity_type_options = ['spin','strength_training','barre','yoga','dance','pilates'];
     time_preference_options = ['after_work','before_work','during_lunch'];
     advanced_rating_options = ['intructor_energy','soreness','sweat_level','upbeat_music'];
+
+
 
     // START - PROTOTYPES 
 
@@ -217,11 +224,13 @@ app.configure(function(){
         return a[rec_score_function]() - b[rec_score_function]();
       };
     };
+
     var sortStudiosByRecScoreDesc = function(rec_score_function) {
       return function(a, b) {
         return b[rec_score_function]() - a[rec_score_function]();
       };
     };
+
 
     function Studio(self){
       Studio.allInstances.push      (this);
@@ -276,7 +285,6 @@ app.configure(function(){
       }
     };
 
-    
         
 
     function User(self){
@@ -444,6 +452,7 @@ app.configure(function(){
       class_grades['total'] += score;
     }
 
+
     var calculate_consistency_score = function(){
      
       // Hash table counts up the # of classes taken each week 
@@ -477,6 +486,7 @@ app.configure(function(){
       class_grades['consistency'] = score ;
       class_grades['total'] += score;  
     }
+
 
     var rubric = { 'quantity' : 1 }  // points per class 
     var max_points = 20;
@@ -515,9 +525,12 @@ app.configure(function(){
             studio_activity_types.push(klass_activity_types);
 
             var scheduled_classes = klass.scheduled_classes;
-            for (var j=0 ; j < scheduled_classes.length ; j++ ) { reservation_count++; }
+            for (var j=0 ; j < scheduled_classes.length ; j++ ) { 
+              reservation_count++; 
+            }
           }
 
+          // Only include studio if it has ACTIVITY TYPE OVERLAP
           studio_activity_types = studio_activity_types.uniq();
           activity_type_overlap = false;
           for (var i ; i < studio_activity_types.length ; i++){
@@ -529,13 +542,14 @@ app.configure(function(){
           top_studio_reservations_counts.push(reservation_count);
           studio.reservation_count = reservation_count;
 
+          // Only include studio if it HAS 3+ STAR AVG RATING
           if ( avg_rating >= min_rating && activity_type_overlap) {
             recommended_studios.push(studio);
           }
           studio_counter++;
 
-          // Once all studios have been assigned avg ratings & counted, assign recommendation score
 
+          // After all studios are parsed for 3+ stars & activity types, "Assign a recommendation score" to each studio
           if (studio_counter == studios.length){
             assign_recommendation_scores(recommended_studios);
           }
@@ -543,7 +557,7 @@ app.configure(function(){
       });
     }
 
-    // Assign hidden gem score based on ranking (10, 9, 8, 7 .... 0)
+    // Assign HIDDEN GEM SCORE based on ranking (10, 9, 8, 7 .... 0)
     var assign_recommendation_scores = function(recommended_studios){
       top_studio_reservations_counts = top_studio_reservations_counts.sortNumbersDesc().uniq();
       for( var i = 0, points = 10 ; i < top_studio_reservations_counts.length ; i++ ){
@@ -575,12 +589,12 @@ app.configure(function(){
         }
         curr_studio.user_dissimilarity_index = sum_of_differences;
         top_user_dissimilarity_indexes.push(sum_of_differences);
+      }
 
     
     // Assign studios rankings based on user similarity (i.e. least points/differences)
     // 10 points are distributed (10, 9 ,8 ....)
 
-      }
       top_user_dissimilarity_indexes = top_user_dissimilarity_indexes.sortNumbersAsc().uniq();
       for( var i = 0, points = 10 ; i < top_user_dissimilarity_indexes.length ; i++ ){
         var curr_lowest_dissimilarity_index = top_user_dissimilarity_indexes[i];
@@ -595,6 +609,9 @@ app.configure(function(){
       sorted_recommendations = (recommended_studios.sort(sortStudiosByRecScoreDesc('recommendation_score')));
     }  
   // END   - DATA MODELING
+
+
+
 
 
 
