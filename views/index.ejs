@@ -9,6 +9,7 @@
                 <div class="avatar user-specs-avatar center avatar-small">
                   <div class='center'>
                     <h3><%= sample_user.first_name[0]; %></h3>
+                    <h1 class="hidden plus-sign">+</h1>
                   </div>
                 </div>
               </div>
@@ -86,7 +87,9 @@
           <div class="grid-item">
             <section>
               <ul class="grid recommended-list js-recommended-list">
-              <% for (var i = 0 ; i < 6 ; i++){ %>
+              <% var recs_length = sorted_recommendations.length %>
+              <% if (recs_length >= 6){ recs_length = 6 } %>
+              <% for (var i = 0 ;  i < recs_length ; i++ ) { %>
                 <li class="grid-item md-4">
                   <div class="square square-centered recommended-item studio-bg-<%= i+1 %>">
                     <div class="square-content">
@@ -126,21 +129,22 @@
             <div class="weekday-title">
               <h3><%= weekdays[i] %></h3>
             </div>
-            <div class="class-details">
+            <div class='class-content'>
               <% var curr_day_classes = class_calendar[weekdays[i]] %>
               <% for (var j = 0 ; j < curr_day_classes.length ; j++ ) { %>
                 <% var clas = curr_day_classes[j]; %>
-                <% if (clas != 'undefined') { %>
-                  <% var start_time = (new Date(clas.start_time)).toString("hh:mm tt") %>
-                  <ul class='class-details'>
-                    <li class='gamma'><h3><a href="#">
-                      <%= clas.studio.name %>
-                      </a></h3></li>
-                    <li><%= clas.klass.name %></li>
-                    <li><%= start_time %></li>
-                    <li><%= clas.studio.neighborhood %></li>
-                  </ul>
-                <% } %>
+                <% var start_time = (new Date(clas.start_time)).toString("h:mm tt") %>
+                <ul class='class-details'>
+                  <% var studio_names = (clas.studio.name).split(" ") %>
+                  <li><h3><a href="#"><%= studio_names[0] %></a></h3></li>
+                  <li><h3><a href="#"><%= studio_names[1] %></a></h3></li>
+                  <div class='class-specifics'>
+                    <li><p><%= clas.klass.name %></p></li>
+                    <li><p><%= clas.studio.neighborhood %></p></li>
+                    <li><h3><%= start_time %></h3></li>
+                  </div>
+                </ul>
+
               <% } %>
             </div>
           

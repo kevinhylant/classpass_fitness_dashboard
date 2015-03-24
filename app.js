@@ -6,6 +6,9 @@ var express = require('express')
     ,is = require('is_js')
     ,ss = require('simple-statistics')
     ,datejs = require('datejs')
+    ,supertest = require("supertest")
+    ,mocha = require("mocha");
+    // ,et = require('elementtransitions')
     // ,asset_pipeline = require('asset-pipeline')
 
 var app = express();
@@ -143,7 +146,7 @@ app.configure(function(){
     recommended_studios            = [];
     top_studio_reservations_counts = [];
     top_user_dissimilarity_indexes     = [];
-    weekdays = ["sunday","monday","tuesday","wednesday","thursday","friday"];
+    weekdays = ["sunday","monday","tuesday","wednesday","thursday","friday",'saturday'];
     activity_type_options = ['spin','strength_training','barre','yoga','dance','pilates'];
     time_preference_options = ['after_work','before_work','during_lunch'];
     advanced_rating_options = ['intructor_energy','soreness','sweat_level','upbeat_music'];
@@ -225,9 +228,9 @@ app.configure(function(){
       this.attributes               = self;
       this.avg_rating               = 0;
       this.reservation_count        = 0;
+      this.user_dissimilarity_index = 0;
       this.hidden_gem_score         = 0;
       this.user_similarity_score    = 0;
-      this.user_dissimilarity_index = 0;
       this.popularity_score         = function(){
         return (this.avg_rating*2);
       };
@@ -364,6 +367,10 @@ app.configure(function(){
     }
 
     var calculate_variety_score_for = function(type){
+      
+      // Use hash to count each record type
+      // Record types include STUDIOS , KLASSES, ACTIVITIES
+
       var ccs_per_unique_record = {};
       for(var i = 0 ; i < completed_classes.length ; i++ ){
         if (type == 'studio' || type == 'klass'){
@@ -373,7 +380,6 @@ app.configure(function(){
             var curr_record = completed_classes[i][type];
           }
         var current_record_count = ccs_per_unique_record[( curr_record )];
-
         if ( current_record_count > 0 ) {
           ccs_per_unique_record[( curr_record )] = (current_record_count+1);
         }
@@ -381,21 +387,29 @@ app.configure(function(){
             ccs_per_unique_record[( curr_record )] = 1;
           }
       }
+
+      // Return an array with the percentage breakdowns of each record type
+      // Because we're dealing with percentages (up to 100), typically the std deviations range between 10 - 25. Worked very well within my 20pt. max rubric.
       
       var records = Object.keys(ccs_per_unique_record)
          ,completed_classes_record_type_totals = records.map(function(v) { return ccs_per_unique_record[v]; })
          ,completed_classes_breakdown_by_record_type = completed_classes_record_type_totals.map(function(v) { return (v/completed_classes_count); });
 
+
+      // Set max points at 20
       var score = max_points
          ,penalty = 0;
 
+
+      // ACTIVITY TYPE GRADING
       if ( type=='activity_type' ){ 
-        // 50% of score based on activity type consistency (standard deviation of percentage makeup)
+        
+        // 50% of score based on consistency 
         var penalty = (ss.standard_deviation(completed_classes_breakdown_by_record_type))/2.0;
 
         if ( penalty > 12.5 || records.length == 1 ) {penalty = 12.5;}
         
-        // 50% of score based on quantity of unique activities
+        // 50% of score based on quantity of unique activities (even 1 counts)
         if        (records.length < 2 ){penalty += 12.5}
           else if (records.length < 3 ){penalty += 8}
           else if (records.length < 4 ){penalty += 4}
@@ -403,8 +417,10 @@ app.configure(function(){
           else if (records.length < 6 ){penalty += 0}
       }
 
+      // STUDIO VARIETY GRADING
         else if ( type=='studio'){
 
+          // Completed Class Record Type Totals is an array with the sums of each record type
           if        (completed_classes_record_type_totals.length <= 2){penalty = 20}
             else if (completed_classes_record_type_totals.length <= 3){penalty = 15}
             else if (completed_classes_record_type_totals.length <= 4){penalty = 10}
@@ -429,6 +445,8 @@ app.configure(function(){
     }
 
     var calculate_consistency_score = function(){
+     
+      // Hash table counts up the # of classes taken each week 
       var weekly_classes_hash = {}
          ,score = 20
          ,penalty = 0;
@@ -442,10 +460,12 @@ app.configure(function(){
           else { weekly_classes_hash[week]++ }
       }
 
+      // Sort hash table into an array of sub totals to easily find the minimum week
+
       var weeks = Object.keys(weekly_classes_hash)
          ,wk_totals = weeks.map(function(v) { return weekly_classes_hash[v]; });
 
-      if(wk_totals.min() <= 1){ penalty = 15 }
+      if       (wk_totals.min() <= 1){ penalty = 15 }  // being a little generous :) 
         else if(wk_totals.min() <= 2){ penalty = 10 }
         else if(wk_totals.min() <= 3){ penalty = 4 }
         else if(wk_totals.min() <= 4){ penalty = 2 }
@@ -458,40 +478,36 @@ app.configure(function(){
       class_grades['total'] += score;  
     }
 
-
-    var rubric = {
-      'quantity'        : 1,    // points per class 
-      'activity_variety': 1.0,  // point multiplier. multiplied by point totals per activity type.
-      'studio_variety'  : 4.16, // point per unique studio (ideal is 6 diff studios)
-      'class_variety'   : 0.5,  //         
-      'consistency'     : 0.5     
-    }
-
+    var rubric = { 'quantity' : 1 }  // points per class 
     var max_points = 20;
 
+
+    // FINDING RECOMMENDED STUDIOS
     var parse_recommended_studios = function(){
       studio_activity_types = []
       for (var i = 0 ; i < studios.length ; i++) {
         average_studio_rating(studios[i]);
       }
-
-     
     };
     
+    // Some logic left to an api call to find avg rating (easier)
+      // Want to refactor this, with larger # of records, this becomes slow (one call per studio!)
+    
     var average_studio_rating = function(studio){
-      var studio = new Studio(studio)
+      var studio = new Studio(studio)         // Object orientation for easier recall of attributes
       var studio_id = studio.attributes.id;
 
+      //  Using a counter to set a reservation count for each studio, later used to assign "hidden gem" points
       var reservation_count = 0;
 
       var studio_avg_rating_endpoint = api_domain+"/studio/"+studio_id+"/average_rating";
-      request.get(studio_avg_rating_endpoint, function(err, response, body) {
+      request.get(studio_avg_rating_endpoint, function(err, response, body) {    // CALLING API
         if (!err && response.statusCode == 200) {
-          console.log('Calling average studio rating endpoint');
+          console.log('Calling average studio rating endpoint'); 
           var avg_rating = JSON.parse(body);
           studio.avg_rating = avg_rating;
-          var klasses = studio.attributes.klasses;
 
+          var klasses = studio.attributes.klasses;
           for (var i=0 ; i < klasses.length ; i++ ){
             klass = klasses[i];
             klass_activity_hash = klass.activity_type;
@@ -517,6 +533,9 @@ app.configure(function(){
             recommended_studios.push(studio);
           }
           studio_counter++;
+
+          // Once all studios have been assigned avg ratings & counted, assign recommendation score
+
           if (studio_counter == studios.length){
             assign_recommendation_scores(recommended_studios);
           }
@@ -524,13 +543,13 @@ app.configure(function(){
       });
     }
 
+    // Assign hidden gem score based on ranking (10, 9, 8, 7 .... 0)
     var assign_recommendation_scores = function(recommended_studios){
       top_studio_reservations_counts = top_studio_reservations_counts.sortNumbersDesc().uniq();
       for( var i = 0, points = 10 ; i < top_studio_reservations_counts.length ; i++ ){
         var curr_top_res_count = top_studio_reservations_counts[i];
         for( var j = 0 ; j < recommended_studios.length ; j++ ){
           var curr_studio = recommended_studios[j];
-
           if (curr_studio.reservation_count == curr_top_res_count ){
             curr_studio.hidden_gem_score    += points;
             if (points > 0){points--;}
@@ -539,11 +558,13 @@ app.configure(function(){
       }
 
       for (var i = 0 ; i < recommended_studios.length ; i++){
-        // calculate the sum of differences between desired advanced qualities and studio's ratings
+
+        // Calculate sum of differences between quality preferences and related avg studio rating
+        // QUALITY PREFERENCES => intructor_energy, sweat_level, upbeat_music, soreness
         
         var curr_studio = recommended_studios[i];
         curr_studio.avg_advanced_ratings();
-        sum_of_differences = 0; //sum_total_differences_btwn_adv_pref_and_avg_studio_ratings
+        sum_of_differences = 0;     //sum_total_differences_btwn_adv_pref_and_avg_studio_ratings
         curr_studio.avg_advanced_ratings();
         for (var j = 0 ; j < advanced_rating_options.length ; j++) {
           var option = advanced_rating_options[j];
@@ -555,7 +576,9 @@ app.configure(function(){
         curr_studio.user_dissimilarity_index = sum_of_differences;
         top_user_dissimilarity_indexes.push(sum_of_differences);
 
-    // NOW ADD POINT TOTALS BASED ON RANKING
+    
+    // Assign studios rankings based on user similarity (i.e. least points/differences)
+    // 10 points are distributed (10, 9 ,8 ....)
 
       }
       top_user_dissimilarity_indexes = top_user_dissimilarity_indexes.sortNumbersAsc().uniq();
@@ -593,5 +616,3 @@ app.configure(function(){
     // Made point penalty equal to deviation amount to a max of 25 points
   // Studio Variety
     //  Perfectly diverse would be 6 different studios
-
-

@@ -10,5 +10,8 @@
     "express-partials": "*",
     "is_js": "*",
     "simple-statistics": "*"
+  },
+  "devDependencies": {
+    "supertest": "^0.15.0"
   }
 }

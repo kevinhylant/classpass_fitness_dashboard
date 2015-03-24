@@ -10,6 +10,7 @@
   <link rel='stylesheet', href='/stylesheets/sidebar.css'>
   <link rel='stylesheet', href='/stylesheets/fitness_dashboard.css'>
   <link rel='stylesheet', href='/stylesheets/footer.css'>
+  <!-- <link rel='stylesheet', href='./node_modules/elementtransitions/build/elementTransitions.css'> -->
   <title>ClassPass Fitness Dashboard</title>
 </head>
 
@@ -51,7 +52,7 @@
         <div class="hero-content">
           <p class="hero-title">Welcome back, <%= sample_user.first_name %></p>
         </div>
-        <nav class="subnav rec-subnav">
+        <nav class="subnav hero-subnav">
           <ul>
             <li><a class="active" href="/fitness-dashboard">Dashboard</a></li>
             <li><a href="/fitness-dashboard">Upcoming</a></li>
@@ -69,7 +70,7 @@
           <aside>
             <div class="user-specs">
               <div class="avatar user-specs-avatar">
-                <div>K
+                <div><%= sample_user.first_name[0]; %>
                 </div>
               </div>
               <div class="user-specs-header">
@@ -146,38 +147,12 @@
       <div class="grid footer-links">
         <div class="grid-item md-4">
           <h5>Learn More</h5>
-          <div class="footer-learn-more">
-            <div class="grid">
-              <div class="grid-item md-4">
-                <ul>
-                  <li><a href="http://blog.classpass.com" rel="external">Blog</a></li>
-                  <li><a href="/contact">Contact</a></li>
-                  <li><a href="/faq">FAQ</a></li>
-                </ul>
-              </div>
-              <div class="grid-item md-4">
-                <ul>
-                  <li><a href="/jobs">Jobs</a></li>
-                  <li><a href="/partners">Partners</a></li>
-                  <li><a href="/press">Press</a></li>
-                </ul>
-              </div>
-              <div class="grid-item md-4">
-                <ul>
-                  <li><a href="/privacy">Privacy</a></li>
-                  <li><a href="/about">About</a></li>
-                  <li><a href="/terms">Terms</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
         </div>
         <div class="grid-item md-4">
           <h5>Connect</h5>
         </div>
         <div class="grid-item md-4">
           <h5>Want more ClassPass?</h5>
-          <p><a rel="external" href="https://itunes.apple.com/us/app/classpass/id912947244?mt=8&amp;uo=4">Download ClassPass for iPhone</a></p>
         </div>
       </div>
       <div class="footer-copyright">
